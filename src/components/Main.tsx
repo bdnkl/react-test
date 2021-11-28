@@ -3,8 +3,7 @@ export default function Main () {
 
     return (
         <div>
-            React CI / CD Test<br />
-            Hallo Olaf
+            React CI / CD Test
         </div>
     )
 }
