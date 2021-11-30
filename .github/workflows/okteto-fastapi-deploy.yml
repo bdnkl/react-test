@@ -1,4 +1,4 @@
-name: Okteto Flask REST API CI
+name: Okteto Python CI
 
 on:
   push:
