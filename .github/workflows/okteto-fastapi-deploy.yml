@@ -1,0 +1,54 @@
+name: Okteto Flask REST API CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+        - uses: actions/checkout@v2
+        - name: Install python
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.8
+
+        - name: Install python dependencies
+          run: pip install pipenv && pipenv install
+
+        - name: Set context to Okteto Cloud
+          uses: okteto/context@latest
+          with:
+            token: ${{ secrets.OKTETO_TOKEN }}
+
+        - name: Deploy your preview environment
+          uses: okteto/deploy-preview@latest
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            name: staging-${{ github.event.number }}-${secrets.OKTETO_USERNAME}}
+            scope: personal
+            timeout: 15m
+
+
+        - uses: nev7n/wait_for_response@v1
+          with:
+            url: https://api-staging-${{ github.event.number }}-${secrets.OKTETO_USERNAME}}.cloud.okteto.net
+            responseCode: 200
+            timeout: 4000
+
+        - name: Run API tests agaisnt Staging Namespace
+          run: pytest
+          env:
+            STAGING_COUCHDB_URL: https://api-staging-${{ github.event.number }}-${secrets.OKTETO_USERNAME}}.cloud.okteto.net
+
+        - name: Build and deploy application container to Okteto
+          if: ${{ github.event_name == 'push' }}
+          uses: okteto/deploy-stack@master
+          with:
+            name: okteto-fastapi-app
+            build: true
