@@ -7,7 +7,7 @@ const IndexPage = () => {
     <div className="container speakers-list">
       <div className="row">
         {data.map((speaker: SpeakerType) => {
-          return <Speaker speaker={speaker}/>;
+          return <Speaker key={speaker.id} speaker={speaker}/>;
         })}
       </div>
     </div>
