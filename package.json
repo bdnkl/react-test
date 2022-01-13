@@ -7,7 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "predeploy": "next export",
+    "predeploy": "next build & next export",
     "deploy": "gh-pages -d out",
     "test": "jest"
   },
