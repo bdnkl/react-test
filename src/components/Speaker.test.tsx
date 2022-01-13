@@ -14,7 +14,7 @@ describe("speaker component", () => {
     sessions: [{id: "1", title: "session title", room: {name: "room", capacity: 10}, eventYear: "2022"}]
   }
 
-  it("should make sure the speaker component renders correctly", () => {
+  it("makes sure the speaker component renders correctly", () => {
     const tree = renderer.create(
       <Speaker speaker={testSpeaker}/>
     )
