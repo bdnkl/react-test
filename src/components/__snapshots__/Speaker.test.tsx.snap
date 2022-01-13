@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`speaker component should make sure the speaker component renders correctly 1`] = `
+exports[`speaker component makes sure the speaker component renders correctly 1`] = `
 <div
   className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12"
 >
