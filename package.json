@@ -7,8 +7,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "predeploy": "next export",
+    "deploy": "gh-pages -d out",
     "test": "jest"
   },
   "repository": "https://github.com/bdnkl/react-test.git",
@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.4.0",
     "babel-jest": "^27.4.6",

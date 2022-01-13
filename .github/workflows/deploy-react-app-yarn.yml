@@ -25,6 +25,8 @@ jobs:
           cache: 'yarn'
       - name: Install
         run: yarn install
+      - name: Test
+        run: npm test
       - name: Deploy
         env:
           NODE_ENV: production
@@ -34,5 +36,3 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/bdnkl/digital-hometown-frontend.git
           npm run deploy
-      - name: Test
-        run: npm test
