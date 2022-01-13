@@ -1,3 +1,4 @@
+import React from "react";
 import {SessionType} from "../resources/session";
 import {SpeakerType} from "../resources/speaker";
 
