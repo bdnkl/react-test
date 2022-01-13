@@ -1,4 +1,4 @@
-import {data} from "../SpeakerData";
+import {data} from "../data/SpeakerData";
 import Speaker from "../src/components/Speaker";
 import {SpeakerType} from "../src/resources/speaker";
 
