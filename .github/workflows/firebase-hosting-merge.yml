@@ -4,14 +4,19 @@
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm run predeploy
+      - name: install packages
+        run: yarn install
+      - name: build
+        run: npm run predeploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
