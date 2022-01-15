@@ -1,5 +1,5 @@
 # react-test
-Simple react application for testing new technics for coding, testing and deploying.
+Simple react application with next.js framework for testing new technics for coding, testing and deploying.
 
 ### Deployments
 - Firebase: https://react-test-bdnkl.web.app/
