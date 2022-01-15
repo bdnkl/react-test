@@ -1,8 +1,5 @@
 # react-test
-
-[comment]: <> (
-TODO describe it
-) 
+Simple react application for testing new technics for coding, testing and deploying.
 
 ### Deployments
 - Firebase: https://react-test-bdnkl.web.app/
