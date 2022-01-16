@@ -1,7 +1,7 @@
 import React from "react";
 import {useSpeakerContext} from "../contexts/SpeakerContext";
 
-function speakerDelete() {
+function SpeakerDelete() {
   const {speaker, deleteRecord} = useSpeakerContext();
 
   return (
@@ -25,4 +25,4 @@ function speakerDelete() {
   );
 }
 
-export default speakerDelete;
+export default SpeakerDelete;

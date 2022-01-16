@@ -20,10 +20,10 @@ function Sessions() {
   return (
     <div className="sessionBox card h-250">
       {sessions
-        .filter(function (session) {
+        .filter((session) => {
           return session.eventYear === eventYear;
         })
-        .map(function (session) {
+        .map((session) => {
           return (
             <div className="session w-100" key={session.id}>
               <Session {...session} />
@@ -76,7 +76,7 @@ function SpeakerFavorite() {
   return (
     <div className="action padB1">
       <span
-        onClick={function () {
+        onClick={() => {
           setInTransition(true);
           updateRecord(
             {
@@ -133,13 +133,13 @@ function SpeakerDemographics() {
 
 type SpeakerNoErrorBoundaryPropType = SpeakerContextValue & { showErrorCard?: boolean }
 
-const SpeakerNoErrorBoundary = memo(({
+const SpeakerNoErrorBoundary = memo(function Component({
                                        speaker,
                                        updateRecord,
                                        insertRecord,
                                        deleteRecord,
                                        showErrorCard,
-                                     }: SpeakerNoErrorBoundaryPropType) => {
+                                     }: SpeakerNoErrorBoundaryPropType) {
     const {showSessions} = useSpeakerFilterContext()
     console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
     if (showErrorCard) {

@@ -2,7 +2,7 @@ import React from "react";
 import useAuthContext from "../contexts/AuthContext";
 
 function withAuth(Component) {
-  return function (props) {
+  return function WithAuth(props) {
     const {loggedInUser, setLoggedInUser} = useAuthContext();
     return (
       <Component
