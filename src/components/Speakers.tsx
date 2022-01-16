@@ -1,15 +1,15 @@
-import {data} from "../../data/SpeakerData";
-import React from "react";
-import SpeakersList from "./SpeakersList";
+import React from "react"
 import SpeakersToolbar from "./SpeakersToolbar";
-import Header from "./Header";
+import SpeakersList from "./SpeakersList";
+import { SpeakerFilterProvider } from "../contexts/SpeakerFilterContext";
 
-export default function Speakers() {
+function Speakers() {
   return (
-    <div className="container-fluid">
-      <Header/>
-      <SpeakersToolbar/>
-      <SpeakersList data={data}/>
-    </div>
-  )
+    <SpeakerFilterProvider startingShowSessions={false}>
+      <SpeakersToolbar />
+      <SpeakersList />
+    </SpeakerFilterProvider>
+  );
 }
+
+export default Speakers;

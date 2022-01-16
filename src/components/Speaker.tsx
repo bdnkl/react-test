@@ -1,8 +1,10 @@
-import React from "react";
-import {SessionType} from "../resources/session";
-import {SpeakerType} from "../resources/speaker";
+import React, {memo, useState} from "react";
+import {useSpeakerFilterContext} from "../contexts/SpeakerFilterContext";
+import {SpeakerContextValue, SpeakerProvider, useSpeakerContext} from "../contexts/SpeakerContext";
+import SpeakerDelete from "./SpeakerDelete";
+import ErrorBoundary from "./ErrorBoundary";
 
-function Session({title, room}: SessionType) {
+function Session({title, room}) {
   return (
     <span className="session w-100">
       {title} <strong>Room: {room.name}</strong>
@@ -10,18 +12,47 @@ function Session({title, room}: SessionType) {
   );
 }
 
-function Sessions({sessions}: { sessions: Array<SessionType> }) {
+function Sessions() {
+  const {eventYear} = useSpeakerFilterContext()
+  const {speaker} = useSpeakerContext()
+  const sessions = speaker.sessions;
+
   return (
     <div className="sessionBox card h-250">
-      <Session {...sessions[0]} />
+      {sessions
+        .filter(function (session) {
+          return session.eventYear === eventYear;
+        })
+        .map(function (session) {
+          return (
+            <div className="session w-100" key={session.id}>
+              <Session {...session} />
+            </div>
+          );
+        })}
     </div>
   );
 }
 
-function SpeakerImage({id, first, last}: SpeakerType) {
+function ImageWithFallback({src, ...props}) {
+  const [error, setError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
+
+  function onError() {
+    if (!error) {
+      setImgSrc("/images/speaker-99999.jpg");
+      setError(true);
+    }
+  }
+
+  return <img src={imgSrc} {...props} onError={onError} alt="picture of speaker"/>;
+}
+
+function SpeakerImage() {
+  const {speaker: {id, first, last}} = useSpeakerContext();
   return (
     <div className="speaker-img d-flex flex-row justify-content-center align-items-center h-300">
-      <img
+      <ImageWithFallback
         className="contain-fit"
         src={`/images/speaker-${id}.jpg`}
         width="300"
@@ -31,7 +62,50 @@ function SpeakerImage({id, first, last}: SpeakerType) {
   );
 }
 
-function SpeakerDemographics({first, last, bio, company, twitterHandle}: SpeakerType) {
+function SpeakerFavorite() {
+  const {speaker, updateRecord} = useSpeakerContext();
+  const [inTransition, setInTransition] = useState(false);
+
+  function doneCallback() {
+    setInTransition(false);
+    console.log(
+      `In SpeakerFavorite:doneCallback    ${new Date().getMilliseconds()}`
+    );
+  }
+
+  return (
+    <div className="action padB1">
+      <span
+        onClick={function () {
+          setInTransition(true);
+          updateRecord(
+            {
+              ...speaker,
+              favorite: !speaker.favorite,
+            },
+            doneCallback
+          );
+        }}
+      >
+        <i
+          className={
+            speaker.favorite === true
+              ? "fa fa-star orange"
+              : "fa fa-star-o orange"
+          }
+        />{" "}
+        Favorite{" "}
+        {inTransition ? (
+          <span className="fas fa-circle-notch fa-spin"/>
+        ) : null}
+      </span>
+    </div>
+  );
+}
+
+function SpeakerDemographics() {
+  const {speaker: {first, last, bio, company, twitterHandle}} = useSpeakerContext()
+
   return (
     <div className="speaker-info">
       <div className="d-flex justify-content-between mb-3">
@@ -39,8 +113,9 @@ function SpeakerDemographics({first, last, bio, company, twitterHandle}: Speaker
           {first} {last}
         </h3>
       </div>
+      <SpeakerFavorite/>
       <div>
-        <p className="card-description">{bio}</p>
+        <p className="card-description">{bio.substring(0, 70)}</p>
         <div className="social d-flex flex-row mt-4">
           <div className="company">
             <h5>Company</h5>
@@ -56,16 +131,68 @@ function SpeakerDemographics({first, last, bio, company, twitterHandle}: Speaker
   );
 }
 
-function Speaker({speaker}: {speaker: SpeakerType }) {
+type SpeakerNoErrorBoundaryPropType = SpeakerContextValue & { showErrorCard?: boolean }
+
+const SpeakerNoErrorBoundary = memo(({
+                                       speaker,
+                                       updateRecord,
+                                       insertRecord,
+                                       deleteRecord,
+                                       showErrorCard,
+                                     }: SpeakerNoErrorBoundaryPropType) => {
+    const {showSessions} = useSpeakerFilterContext()
+    console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
+    if (showErrorCard) {
+      return (
+        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
+          <div className="card card-height p-4 mt-4">
+            <img src={"/images/speaker-99999.jpg"} alt={`${speaker.first} ${speaker.last}`}/>
+            <div>
+              <b>Error Showing Speaker</b>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <SpeakerProvider
+        speaker={speaker}
+        updateRecord={updateRecord}
+        insertRecord={insertRecord}
+        deleteRecord={deleteRecord}
+      >
+        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
+          <div className="card card-height p-4 mt-4">
+            <SpeakerImage/>
+            <SpeakerDemographics/>
+          </div>
+          {showSessions === true ? <Sessions/> : null}
+          <SpeakerDelete/>
+        </div>
+      </SpeakerProvider>
+    );
+  },
+  areEqualSpeaker);
+
+
+function Speaker(props: SpeakerContextValue) {
   return (
-    <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
-      <div className="card card-height p-4 mt-4">
-        <SpeakerImage {...speaker}/>
-        <SpeakerDemographics {...speaker} />
-      </div>
-      <Sessions sessions={speaker.sessions}/>
-    </div>
+    <ErrorBoundary
+      errorUI={
+        <SpeakerNoErrorBoundary
+          {...props}
+          showErrorCard={true}
+        />
+      }
+    >
+      <SpeakerNoErrorBoundary {...props}/>
+    </ErrorBoundary>
   );
+}
+
+function areEqualSpeaker(prevProps, nextProps) {
+  return prevProps.speaker.favorite === nextProps.speaker.favorite;
 }
 
 export default Speaker;
