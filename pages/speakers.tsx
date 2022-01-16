@@ -1,5 +1,6 @@
 import React from "react";
 import SpeakersRenderProps from "../src/components/SpeakersRenderProps";
+import Image from "next/image";
 
 const Speakers = () => {
   return (
@@ -9,10 +10,11 @@ const Speakers = () => {
           <div>
             {speakers.map(({ imageSrc, name }) => {
               return (
-                <img
+                <Image
                   src={`images/${imageSrc}.jpg`}
                   alt={name}
                   key={imageSrc}
+                  width="300"
                 />
               );
             })}

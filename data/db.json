@@ -2,8 +2,8 @@
   "speakers": [
     {
       "id": "47344",
-      "first": "Jane",
-      "last": "Doe",
+      "first": "Ronald",
+      "last": "Reagon",
       "company": "GitHub",
       "bio": "Bio not entered yet",
       "twitterHandle": "janestwitter",
@@ -11,7 +11,7 @@
       "sessions": [
         {
           "id": "88888",
-          "title": "New Session For Jane",
+          "title": "New Session For Ronald",
           "room": {
             "name": "Main Ball Room"
           },

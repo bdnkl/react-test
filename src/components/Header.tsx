@@ -1,12 +1,13 @@
-import React from "react"
+import React from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
 import withAuth from "./withAuth";
-import {UserType} from "../resources/User";
+import { UserType } from "../resources/User";
+import Image from "next/image";
 
 interface HeaderProps {
-  loggedInUser: UserType,
-  setLoggedInUser: (arg: UserType) => {}
+  loggedInUser: UserType;
+  setLoggedInUser: (arg: UserType) => {};
 }
 
 function Header({ loggedInUser, setLoggedInUser }: HeaderProps) {
@@ -17,7 +18,7 @@ function Header({ loggedInUser, setLoggedInUser }: HeaderProps) {
       <div className="container mobile-container">
         <div className="d-flex justify-content-between">
           <div>
-            <img alt="SVCC Home Page" src={"/images/SVCCLogo.png"} />
+            <Image alt="SVCC Home Page" src={"/images/SVCCLogo.png"} width={100} height={30}/>
           </div>
           <div className="light">
             <h4 className="header-title">Silicon Valley Code Camp</h4>

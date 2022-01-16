@@ -1,10 +1,15 @@
-import React, {memo, useState} from "react";
-import {useSpeakerFilterContext} from "../contexts/SpeakerFilterContext";
-import {SpeakerContextValue, SpeakerProvider, useSpeakerContext} from "../contexts/SpeakerContext";
+import React, { memo, useState } from "react";
+import { useSpeakerFilterContext } from "../contexts/SpeakerFilterContext";
+import {
+  SpeakerContextValue,
+  SpeakerProvider,
+  useSpeakerContext,
+} from "../contexts/SpeakerContext";
 import SpeakerDelete from "./SpeakerDelete";
 import ErrorBoundary from "./ErrorBoundary";
+import Image from "next/image";
 
-function Session({title, room}) {
+function Session({ title, room }) {
   return (
     <span className="session w-100">
       {title} <strong>Room: {room.name}</strong>
@@ -13,8 +18,8 @@ function Session({title, room}) {
 }
 
 function Sessions() {
-  const {eventYear} = useSpeakerFilterContext()
-  const {speaker} = useSpeakerContext()
+  const { eventYear } = useSpeakerFilterContext();
+  const { speaker } = useSpeakerContext();
   const sessions = speaker.sessions;
 
   return (
@@ -34,7 +39,7 @@ function Sessions() {
   );
 }
 
-function ImageWithFallback({src, ...props}) {
+function ImageWithFallback({ src, ...props }) {
   const [error, setError] = useState(false);
   const [imgSrc, setImgSrc] = useState(src);
 
@@ -45,17 +50,29 @@ function ImageWithFallback({src, ...props}) {
     }
   }
 
-  return <img src={imgSrc} {...props} onError={onError} alt="picture of speaker"/>;
+  return (
+    <Image
+      src={imgSrc}
+      {...props}
+      width="300"
+      height="300"
+      onError={onError}
+      alt="picture of speaker"
+    />
+  );
 }
 
 function SpeakerImage() {
-  const {speaker: {id, first, last}} = useSpeakerContext();
+  const {
+    speaker: { id, first, last },
+  } = useSpeakerContext();
   return (
     <div className="speaker-img d-flex flex-row justify-content-center align-items-center h-300">
       <ImageWithFallback
         className="contain-fit"
         src={`/images/speaker-${id}.jpg`}
         width="300"
+        height="200"
         alt={`${first} ${last}`}
       />
     </div>
@@ -63,7 +80,7 @@ function SpeakerImage() {
 }
 
 function SpeakerFavorite() {
-  const {speaker, updateRecord} = useSpeakerContext();
+  const { speaker, updateRecord } = useSpeakerContext();
   const [inTransition, setInTransition] = useState(false);
 
   function doneCallback() {
@@ -95,16 +112,16 @@ function SpeakerFavorite() {
           }
         />{" "}
         Favorite{" "}
-        {inTransition ? (
-          <span className="fas fa-circle-notch fa-spin"/>
-        ) : null}
+        {inTransition ? <span className="fas fa-circle-notch fa-spin" /> : null}
       </span>
     </div>
   );
 }
 
 function SpeakerDemographics() {
-  const {speaker: {first, last, bio, company, twitterHandle}} = useSpeakerContext()
+  const {
+    speaker: { first, last, bio, company, twitterHandle },
+  } = useSpeakerContext();
 
   return (
     <div className="speaker-info">
@@ -113,7 +130,7 @@ function SpeakerDemographics() {
           {first} {last}
         </h3>
       </div>
-      <SpeakerFavorite/>
+      <SpeakerFavorite />
       <div>
         <p className="card-description">{bio.substring(0, 70)}</p>
         <div className="social d-flex flex-row mt-4">
@@ -131,62 +148,63 @@ function SpeakerDemographics() {
   );
 }
 
-type SpeakerNoErrorBoundaryPropType = SpeakerContextValue & { showErrorCard?: boolean }
+type SpeakerNoErrorBoundaryPropType = SpeakerContextValue & {
+  showErrorCard?: boolean;
+};
 
 const SpeakerNoErrorBoundary = memo(function Component({
-                                       speaker,
-                                       updateRecord,
-                                       insertRecord,
-                                       deleteRecord,
-                                       showErrorCard,
-                                     }: SpeakerNoErrorBoundaryPropType) {
-    const {showSessions} = useSpeakerFilterContext()
-    console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
-    if (showErrorCard) {
-      return (
-        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
-          <div className="card card-height p-4 mt-4">
-            <img src={"/images/speaker-99999.jpg"} alt={`${speaker.first} ${speaker.last}`}/>
-            <div>
-              <b>Error Showing Speaker</b>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
+  speaker,
+  updateRecord,
+  insertRecord,
+  deleteRecord,
+  showErrorCard,
+}: SpeakerNoErrorBoundaryPropType) {
+  const { showSessions } = useSpeakerFilterContext();
+  console.log(`speaker: ${speaker.id} ${speaker.first} ${speaker.last}`);
+  if (showErrorCard) {
     return (
-      <SpeakerProvider
-        speaker={speaker}
-        updateRecord={updateRecord}
-        insertRecord={insertRecord}
-        deleteRecord={deleteRecord}
-      >
-        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
-          <div className="card card-height p-4 mt-4">
-            <SpeakerImage/>
-            <SpeakerDemographics/>
+      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
+        <div className="card card-height p-4 mt-4">
+          <Image
+            src="/images/speaker-99999.jpg"
+            width="300"
+            height="300"
+            alt={`${speaker.first} ${speaker.last}`}
+          />
+          <div>
+            <b>Error Showing Speaker</b>
           </div>
-          {showSessions === true ? <Sessions/> : null}
-          <SpeakerDelete/>
         </div>
-      </SpeakerProvider>
+      </div>
     );
-  },
-  areEqualSpeaker);
+  }
 
+  return (
+    <SpeakerProvider
+      speaker={speaker}
+      updateRecord={updateRecord}
+      insertRecord={insertRecord}
+      deleteRecord={deleteRecord}
+    >
+      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-sm-12 col-xs-12">
+        <div className="card card-height p-4 mt-4">
+          <SpeakerImage />
+          <SpeakerDemographics />
+        </div>
+        {showSessions === true ? <Sessions /> : null}
+        <SpeakerDelete />
+      </div>
+    </SpeakerProvider>
+  );
+},
+areEqualSpeaker);
 
 function Speaker(props: SpeakerContextValue) {
   return (
     <ErrorBoundary
-      errorUI={
-        <SpeakerNoErrorBoundary
-          {...props}
-          showErrorCard={true}
-        />
-      }
+      errorUI={<SpeakerNoErrorBoundary {...props} showErrorCard={true} />}
     >
-      <SpeakerNoErrorBoundary {...props}/>
+      <SpeakerNoErrorBoundary {...props} />
     </ErrorBoundary>
   );
 }

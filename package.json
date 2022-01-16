@@ -19,6 +19,8 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.4.0",
+    "@types/next": "^9.0.0",
+    "@types/react-test-renderer": "^17.0.1",
     "axios": "^0.24.0",
     "babel-jest": "^27.4.6",
     "firebase": "^9.6.3",
