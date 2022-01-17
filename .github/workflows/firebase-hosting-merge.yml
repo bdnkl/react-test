@@ -16,7 +16,7 @@ jobs:
       - name: install packages
         run: yarn install
       - name: build
-        run: next build && next export -o build
+        run: yarn predeploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
