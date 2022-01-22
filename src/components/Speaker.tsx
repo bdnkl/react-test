@@ -1,13 +1,18 @@
-import React, { memo, useState } from "react";
-import { useSpeakerFilterContext } from "../contexts/SpeakerFilterContext";
+import React, {
+  memo,
+  useState,
+} from 'react';
+
+import Image from 'next/image';
+
 import {
   SpeakerContextValue,
   SpeakerProvider,
   useSpeakerContext,
-} from "../contexts/SpeakerContext";
-import SpeakerDelete from "./SpeakerDelete";
-import ErrorBoundary from "./ErrorBoundary";
-import Image from "next/image";
+} from '../contexts/SpeakerContext';
+import { useSpeakerFilterContext } from '../contexts/SpeakerFilterContext';
+import ErrorBoundary from './ErrorBoundary';
+import SpeakerDelete from './SpeakerDelete';
 
 function Session({ title, room }) {
   return (
@@ -201,7 +206,7 @@ areEqualSpeaker);
 
 function Speaker(props: SpeakerContextValue) {
   return (
-    <ErrorBoundary
+    <ErrorBoundary // if an error occured show the component bellow
       errorUI={<SpeakerNoErrorBoundary {...props} showErrorCard={true} />}
     >
       <SpeakerNoErrorBoundary {...props} />
